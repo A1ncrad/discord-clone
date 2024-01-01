@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+:root {
+  --brand-cl: #7289da;
+	--dark-blue: #5865F2;
+  --lightest-cl: #a5a5a5;
+  --light-cl: #424549;
+  --main-cl: #36393e;
+  --dark-cl: #282b30;
+  --darkest-cl: #1e2124;
+  --green-cl: #1f8b4c;
+  --green-light-cl: #2ecc71;
+}
+
+body {
+  font-family: 'Open Sans';
+  overflow: hidden;
+  height: 100dvh;
+  color: var(--light-cl);
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+.container {
+  @extend #root;
+  display: flex;
+}

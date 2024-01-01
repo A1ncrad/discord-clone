@@ -1,0 +1,87 @@
+.background {
+  height: 100%;
+  width: 100%;
+}
+
+.form {
+  min-width: min(500px, 100vw);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+
+  padding: 2em;
+  color: var(--lightest-cl);
+
+  border-radius: 0.25em;
+  background-color: var(--main-cl);
+
+  &__title {
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  &__caption {
+    text-align: center;
+    margin-top: 0.5em;
+  }
+
+  &__body {
+    margin-top: 1em;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  &__input {
+    background-color: var(--darkest-cl);
+    color: inherit;
+
+    font-size: 1rem;
+    padding: 0.75em;
+    border-radius: 0.2em;
+  }
+
+  &__link {
+		font-size: .8rem;
+		font-weight: 600;
+
+    color: #3498DB ;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+  }
+
+	&__button {
+		@extend .form__input;
+		background-color: var(--brand-cl);
+		color: #fff;
+		cursor: pointer;
+		transition: .3s;
+
+		&:hover {
+			background-color: var(--dark-blue);
+		}
+	}
+
+	&__text {
+		font-size: .8rem;
+	}
+}

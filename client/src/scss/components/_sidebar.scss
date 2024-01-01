@@ -1,0 +1,94 @@
+.sidebar {
+  flex: 0 0 20%;
+  background-color: var(--dark-cl);
+  display: flex;
+
+  &__scroller {
+    background-color: var(--darkest-cl);
+    padding: 0.75em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+		padding: 0.5em;
+		gap: 0.5em;
+  }
+
+	&__button {
+		padding: .75em 1em;
+		color: #fff;
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		cursor: pointer;
+		border-radius: .25em;
+		font-weight: 400;
+
+		position: relative;
+
+		&:hover, &.active {
+			background-color: var(--light-cl);
+		}
+
+		& .icon {
+			aspect-ratio: 1;
+			height: 2em;
+		}
+	}
+
+  &__search {
+
+    & input {
+      background-color: var(--darkest-cl);
+      border-radius: 0.2em;
+      color: #fff;
+      outline: none;
+      padding: 0.5em;
+      width: 100%;
+    }
+  }
+}
+
+.scroller__tile {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: var(--dark-cl);
+	transition: .3s;
+
+  .icon {
+    height: 1.5rem;
+    color: #fff;
+		transition: inherit;
+  }
+
+  &.active,
+  &:hover {
+    border-radius: 1rem;
+    background-color: var(--brand-cl);
+  }
+
+  &--green {
+    .icon {
+      color: var(--green-cl);
+    }
+
+    &.active,
+    &:hover {
+      background-color: var(--green-light-cl);
+
+      .icon {
+        color: #fff;
+      }
+    }
+  }
+}
