@@ -5,11 +5,12 @@ import { faCompass } from '@fortawesome/free-solid-svg-icons';
 import { faPerson } from '@fortawesome/free-solid-svg-icons';
 import { faShop } from '@fortawesome/free-solid-svg-icons';
 
-import { useRef } from 'react';
+import { useState } from 'react';
 
-let isLogged = false;
 
 export default function App() {
+	const [isLogged, setIsLogged] = useState(false);
+
   return (
     <>
       {(isLogged && (
@@ -20,7 +21,7 @@ export default function App() {
       )) || (
         <>
           <img src="background.svg" className="background" alt="" />
-          <Auth></Auth>
+          <Auth setIsLogged={setIsLogged}></Auth>
         </>
       )}
     </>
@@ -32,7 +33,6 @@ function Main() {
 }
 
 function Sidebar() {
-  const active = useRef(0);
 
   return (
     <aside className="sidebar">
@@ -91,9 +91,35 @@ function Tile({ icon, className }) {
   );
 }
 
-function Auth() {
+function Auth({ setIsLogged }) {
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+
+    const data = {};
+
+    // const data = [...form.elements].filter(element => {
+    // 	return element.matches("input");
+    // }).map(element => ( {[element.name]: element.value} ) );
+
+    for (const element of form.elements) {
+      if (!element.matches('input')) continue;
+      data[element.name] = element.value;
+    }
+
+    fetch('http://127.0.0.1:3000', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      setIsLogged(res.ok);
+    });
+  }
+
   return (
-    <form className="form" action="" method="post">
+    <form className="form" onSubmit={handleSubmit}>
       <h1 className="form__title">Welcome back!</h1>
       <p className="form__caption">We're so excited to see you again!</p>
       <div className="form__body">
