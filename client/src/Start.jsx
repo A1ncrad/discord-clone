@@ -1,14 +1,24 @@
-export default function Start() {
+import { useState } from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
+
+export default function Start({ setLoggedIn }) {
   return (
     <>
       <img src="background.svg" className="background" alt="" />
-      <Auth setIsLogged={loggedIn}></Auth>
+
+      <Routes>
+        <Route path="/" element={<Auth setLoggedIn={setLoggedIn} />} />
+        <Route path="register" element={<Register />} />
+      </Routes>
     </>
   );
 }
 
+function Register() {
+  return <div>hi</div>;
+}
 
-function Auth({ setIsLogged }) {
+function Auth({ setLoggedIn }) {
   const [isErorrOccured, setIsErorrOccured] = useState(false);
 
   function handleSubmit(e) {
@@ -34,7 +44,7 @@ function Auth({ setIsLogged }) {
       body: JSON.stringify(data),
     }).then((res) => {
       console.log(res);
-      setIsLogged(res.ok);
+      setLoggedIn(res.ok);
       setIsErorrOccured(!res.ok);
     });
   }
@@ -90,9 +100,9 @@ function Auth({ setIsLogged }) {
           </button>
           <span className="form__text">
             Need an account?{' '}
-            <a href="" className="form__link">
+            <Link to="register" className="form__link">
               Register
-            </a>
+            </Link>
           </span>
         </div>
       </div>

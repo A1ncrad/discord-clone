@@ -4,9 +4,8 @@ import App from './App.jsx';
 import './scss/main.scss';
 
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-		<App/>
+		<App></App>
   </React.StrictMode>
 );
