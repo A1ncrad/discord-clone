@@ -1,21 +1,21 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faCompass } from '@fortawesome/free-solid-svg-icons';
-import { faPerson } from '@fortawesome/free-solid-svg-icons';
-import { faShop } from '@fortawesome/free-solid-svg-icons';
 
+import {
+  faCompass,
+  faPerson,
+  faShop,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
-
-	return (
-		<div className="container">
+  return (
+    <div className="container">
       <Sidebar></Sidebar>
       <Main></Main>
     </div>
-	)
+  );
 }
-
 
 function Main() {
   return <main className="main"></main>;
@@ -29,7 +29,6 @@ function Sidebar() {
     </aside>
   );
 }
-
 
 function Body() {
   return (

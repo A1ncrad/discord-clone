@@ -9,6 +9,7 @@
   margin: 0;
   padding: 0;
   border: none;
+	outline: none;
 }
 
 ul,
@@ -20,8 +21,8 @@ ol {
 button,
 input {
   background: none;
-  border: none;
-  outline: none;
+  color: inherit;
+  font-family: inherit;
 }
 
 legend {
