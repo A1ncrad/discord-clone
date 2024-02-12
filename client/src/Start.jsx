@@ -109,26 +109,46 @@ function Register() {
 }
 
 function FormSelect({ optionsList, placeholder }) {
+  const [options, setOptins] = useState(optionsList);
   const inputRef = useRef();
   const optionsRef = useRef();
 
   function showOptions() {
     const input = inputRef.current;
-    const optionsList = optionsRef.current;
+    const options = optionsRef.current;
 
     input.focus();
-    optionsList.hidden = !optionsList.hidden;
+
+    const prevOptions = document.querySelector('.form__options-list.active');
+    prevOptions?.classList.remove('active');
+    options.classList.add('active');
+  }
+
+  function filterOptions() {
+    const optionsElement = optionsRef.current;
+    const input = inputRef.current;
+
+    const newOptions = options.filter((item) => item.includes(input.value));
+
+    setOptins(newOptions);
+
+    console.log(options);
   }
 
   return (
     <div className="form__select" onClick={showOptions}>
-      <ul className="form__options-list" hidden ref={optionsRef}>
-        {optionsList.map((item) => (
+      <ul className="form__options-list" ref={optionsRef}>
+        {options.map((item) => (
           <li>{item}</li>
         ))}
       </ul>
 
-      <input type="text" ref={inputRef} placeholder={placeholder} />
+      <input
+        type="text"
+        ref={inputRef}
+        placeholder={placeholder}
+        onKeyUp={filterOptions}
+      />
       <FontAwesomeIcon icon={faChevronDown} />
     </div>
   );
