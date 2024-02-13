@@ -2,7 +2,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import { useState, useRef } from 'react';
-import { Link, Routes, Route, Form } from 'react-router-dom';
+import { Link, Routes, Route, Navigate } from 'react-router-dom';
+
+function createHandleSubmit(type, action) {
+  return function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+
+    const data = {};
+
+    for (const element of form.elements) {
+      if (!element.matches('input')) continue;
+      data[element.name] = element.value;
+    }
+
+    fetch(`http://127.0.0.1:3000/${type}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      console.log(res);
+
+      action(res.ok);
+    });
+  };
+}
 
 export default function Start({ setLoggedIn }) {
   return (
@@ -18,6 +44,10 @@ export default function Start({ setLoggedIn }) {
 }
 
 function Register() {
+  const [isErorrOccured, setIsErorrOccured] = useState(false);
+  const [isEnded, setIsEnded] = useState(false);
+  const handleSubmit = createHandleSubmit('register', setIsEnded);
+
   const inputRef = useRef();
 
   function showOptions() {
@@ -53,28 +83,48 @@ function Register() {
   yearList.reverse();
 
   return (
-    <form className="form">
+    <form className="form" onSubmit={handleSubmit}>
+      {isEnded && <Navigate replace to="/" />}
+
       <h1 className="form__title">Create account</h1>
       <div className="form__body">
         <div className="form__item">
           <label htmlFor="email" className="form__label">
             e-mail
           </label>
-          <input className="form__input" type="text" name="mail" id="email" />
+          <input
+            className="form__input"
+            type="text"
+            name="mail"
+            id="email"
+            required
+          />
         </div>
 
         <div className="form__item">
           <label htmlFor="nick" className="form__label">
             nickname
           </label>
-          <input className="form__input" type="text" name="nick" id="nick" />
+          <input
+            className="form__input"
+            type="text"
+            name="nick"
+            id="nick"
+            required
+          />
         </div>
 
         <div className="form__item">
           <label htmlFor="name" className="form__label">
             name
           </label>
-          <input className="form__input" type="text" name="name" id="name" />
+          <input
+            className="form__input"
+            type="text"
+            name="name"
+            id="name"
+            required
+          />
         </div>
 
         <div className="form__item">
@@ -86,6 +136,7 @@ function Register() {
             type="password"
             name="password"
             id="password"
+            required
           />
         </div>
 
@@ -109,37 +160,48 @@ function Register() {
 }
 
 function FormSelect({ optionsList, placeholder }) {
-  const [options, setOptins] = useState(optionsList);
+  const [options, setOptions] = useState(optionsList);
   const inputRef = useRef();
   const optionsRef = useRef();
 
-  function showOptions() {
+  function showOptions(e) {
     const input = inputRef.current;
     const options = optionsRef.current;
 
     input.focus();
+    options.classList.toggle('active');
 
-    const prevOptions = document.querySelector('.form__options-list.active');
-    prevOptions?.classList.remove('active');
-    options.classList.add('active');
+    if (e.target.matches('.form__option')) chooseOption(e.target);
   }
 
   function filterOptions() {
-    const optionsElement = optionsRef.current;
     const input = inputRef.current;
 
-    const newOptions = options.filter((item) => item.includes(input.value));
+    const newOptions = optionsList.filter((item) => {
+      item = item.toLowerCase();
+      const text = input.value.toLowerCase();
 
-    setOptins(newOptions);
+      return item.includes(text);
+    });
 
-    console.log(options);
+    setOptions(newOptions);
+  }
+
+  function chooseOption(option) {
+    const input = inputRef.current;
+    const options = optionsRef.current;
+
+    input.value = option.innerText;
+    options.classList.remove('active');
   }
 
   return (
     <div className="form__select" onClick={showOptions}>
       <ul className="form__options-list" ref={optionsRef}>
-        {options.map((item) => (
-          <li>{item}</li>
+        {options.map((item, index) => (
+          <li className="form__option" key={index}>
+            {item}
+          </li>
         ))}
       </ul>
 
@@ -148,6 +210,9 @@ function FormSelect({ optionsList, placeholder }) {
         ref={inputRef}
         placeholder={placeholder}
         onKeyUp={filterOptions}
+        required
+        size={placeholder.length * 2}
+        name={placeholder.toLowerCase()}
       />
       <FontAwesomeIcon icon={faChevronDown} />
     </div>
@@ -156,34 +221,7 @@ function FormSelect({ optionsList, placeholder }) {
 
 function Auth({ setLoggedIn }) {
   const [isErorrOccured, setIsErorrOccured] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-
-    const data = {};
-
-    // const data = [...form.elements].filter(element => {
-    // 	return element.matches("input");
-    // }).map(element => ( {[element.name]: element.value} ) );
-
-    for (const element of form.elements) {
-      if (!element.matches('.form__input')) continue;
-      data[element.name] = element.value;
-    }
-
-    fetch('http://127.0.0.1:3000', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then((res) => {
-      console.log(res);
-      setLoggedIn(res.ok);
-      setIsErorrOccured(!res.ok);
-    });
-  }
+  const handleSubmit = createHandleSubmit('login', setLoggedIn);
 
   return (
     <form className="form" onSubmit={handleSubmit}>

@@ -113,16 +113,17 @@
     &.active {
       display: block;
     }
+  }
 
-    li {
-      padding: 0.75em;
-      background-color: var(--main-cl);
-      cursor: pointer;
-      transition: 0.3s;
+  &__option {
+    padding: 0.75em;
+    background-color: var(--main-cl);
+    cursor: pointer;
+    transition: 0.3s;
 
-      &:hover {
-        background-color: var(--light-cl);
-      }
+    &:hover,
+    &.active {
+      background-color: var(--light-cl);
     }
   }
 
