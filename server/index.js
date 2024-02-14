@@ -2,6 +2,8 @@ import express, { json } from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
 
+import bcryptjs from 'bcryptjs';
+
 const app = express();
 const URI = 'mongodb://localhost:27017';
 const client = new MongoClient(URI);
@@ -40,8 +42,10 @@ async function registerUser(user) {
   await client.connect();
   const database = client.db('discord-clone');
   const users = database.collection('users');
-  await users.insertOne(user);
 
+  user.password = await bcryptjs.hash(user.password, 10);
+
+  await users.insertOne(user);
   await client.close();
 
   return true;
@@ -51,7 +55,7 @@ async function authenticateUser({ mail, password: recievedPassword }) {
   const user = await findUser(mail);
   const actualPassword = user?.password;
 
-  return recievedPassword === actualPassword;
+  return await bcryptjs.compare(recievedPassword, actualPassword);
 }
 
 async function findUser(mail) {
