@@ -33,7 +33,12 @@ function createHandleSubmit(type, action) {
 export default function Start({ setLoggedIn }) {
   return (
     <>
-      <img src="/background.svg" className="background" alt="" />
+      <img
+        src="/background.svg"
+        className="background"
+        alt=""
+        draggable="false"
+      />
 
       <Routes>
         <Route path="/" element={<Auth setLoggedIn={setLoggedIn} />} />
@@ -49,10 +54,6 @@ function Register() {
   const handleSubmit = createHandleSubmit('register', setIsEnded);
 
   const inputRef = useRef();
-
-  function showOptions() {
-    console.log(inputRef);
-  }
 
   const monthList = [
     'January',
@@ -172,6 +173,15 @@ function FormSelect({ optionsList, placeholder }) {
     options.classList.toggle('active');
 
     if (e.target.matches('.form__option')) chooseOption(e.target);
+
+    document.addEventListener('click', (e) => { 
+      if (
+        !e.target.parentNode.matches('.form__select') &&
+        !e.target.matches('.form__select')
+      ) {
+        options.classList.remove('active');
+      }
+    });
   }
 
   function filterOptions() {
@@ -206,6 +216,7 @@ function FormSelect({ optionsList, placeholder }) {
       </ul>
 
       <input
+        className="form__select-input"
         type="text"
         ref={inputRef}
         placeholder={placeholder}
