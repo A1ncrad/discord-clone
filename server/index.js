@@ -2,16 +2,15 @@ import express, { json } from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import bcryptjs from 'bcryptjs';
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 const app = express();
 const URI = 'mongodb://localhost:27017';
 const client = new MongoClient(URI);
 
 const transporter = nodemailer.createTransport({
-  host: 'sandbox.smtp.mailtrap.io',
-  port: 2525,
-  auth: { user: '90b976ef45cfe3', pass: '748b30acf54086' },
+  service: 'Gmail',
+  auth: { user: process.env.GMAIL_USER_NAME, pass: process.env.GMAIL_PASSWORD },
 });
 
 app.use(cors());
@@ -50,6 +49,21 @@ async function registerUser(user) {
   const users = database.collection('users');
 
   user.password = await bcryptjs.hash(user.password, 10);
+
+  const mailOptions = {
+    from: process.env.GMAIL_USER_NAME,
+    to: user.mail,
+    subject: "You've been registered",
+    text: 'OK?',
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    }
+
+    console.log(info);
+  });
 
   await users.insertOne(user);
   await client.close();
