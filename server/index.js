@@ -1,12 +1,18 @@
 import express, { json } from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
-
 import bcryptjs from 'bcryptjs';
+const nodemailer = require('nodemailer');
 
 const app = express();
 const URI = 'mongodb://localhost:27017';
 const client = new MongoClient(URI);
+
+const transporter = nodemailer.createTransport({
+  host: 'sandbox.smtp.mailtrap.io',
+  port: 2525,
+  auth: { user: '90b976ef45cfe3', pass: '748b30acf54086' },
+});
 
 app.use(cors());
 app.use(json());
