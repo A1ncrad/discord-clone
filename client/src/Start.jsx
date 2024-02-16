@@ -16,7 +16,7 @@ function createHandleSubmit(type, action) {
       data[element.name] = element.value;
     }
 
-    fetch(`http://127.0.0.1:3000/${type}`, {
+    fetch(`https://127.0.0.1:3000/${type}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ function FormSelect({ optionsList, placeholder }) {
 
     if (e.target.matches('.form__option')) chooseOption(e.target);
 
-    document.addEventListener('click', (e) => { 
+    document.addEventListener('click', (e) => {
       if (
         !e.target.parentNode.matches('.form__select') &&
         !e.target.matches('.form__select')
