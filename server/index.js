@@ -48,15 +48,15 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/account', (req, res) => {
-  console.log(req.headers);
-  const auth = req.headers.authorization;
+  const token = req.query.token;
 
-  if (!auth || !auth.startsWith('Bearer ')) {
+  if (!token) {
     res.status(403).send({ error: 'cannot verify jwt' });
     return;
   }
 
-  const token = auth.substring(7, auth.length);
+  console.log(token);
+
   let decoded;
 
   try {
@@ -66,13 +66,15 @@ app.get('/account', (req, res) => {
     return;
   }
 
+	console.log(decoded);
+
   const { mail, expiration, password } = decoded;
 
   if (expiration < new Date()) {
     res.status(403).send();
   }
 
-  authenticateUser(mail, password);
+  // authenticateUser(mail, password);
 });
 
 server.listen(3000);
@@ -96,7 +98,7 @@ async function registerUser(user) {
   user.password = await bcryptjs.hash(user.password, 10);
 
   const token = generateToken(user.email, user.password);
-  const link = `localhost:3000/account?token=${token}`;
+  const link = `https://localhost:3000/account?token=${token}`;
 
   const mailOptions = {
     from: process.env.GMAIL_USER_NAME,
