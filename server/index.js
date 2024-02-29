@@ -1,4 +1,5 @@
 import express, { json } from 'express';
+import { WebSocketServer } from 'ws';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import bcryptjs from 'bcryptjs';
@@ -21,11 +22,35 @@ const transporter = nodemailer.createTransport({
   auth: { user: process.env.GMAIL_USER_NAME, pass: process.env.GMAIL_PASSWORD },
 });
 
-app.use(cors({ origin: '*' }));
+app.use(cors());
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 
 const server = https.createServer(credentials, app);
+const wss = new WebSocketServer({ server });
+
+
+wss.on("connection", (ws) => {
+
+
+    ws.on("message", (message) => {
+
+        switch(message.type) {
+            case "login": 
+                authenticateUser(message).then(ws.send)
+                break;
+            case "register":
+                registerUser(message).then(ws.send)
+                break;
+            case "account":
+                verifyToken(message)
+                break;
+        }
+
+    });
+});
+                
+
 
 app.post('/login', (req, res) => {
   console.log(req.body);
@@ -47,8 +72,8 @@ app.post('/register', (req, res) => {
   });
 });
 
-app.get('/account', (req, res) => {
-  const token = req.query.token;
+function verifyToken(message) {
+  const token = message.token;
 
   if (!token) {
     res.status(403).send({ error: 'cannot verify jwt' });
@@ -68,14 +93,15 @@ app.get('/account', (req, res) => {
 
 	console.log(decoded);
 
-  const { mail, expiration, password } = decoded;
+  const { mail, expiration } = decoded;
 
   if (expiration < new Date()) {
     res.status(403).send();
   }
 
-  // authenticateUser(mail, password);
 });
+
+
 
 server.listen(3000);
 
@@ -93,7 +119,7 @@ async function registerUser(user) {
 
   await client.connect();
   const database = client.db('discord-clone');
-  const users = database.collection('users');
+  const users = database.collection('user');
 
   user.password = await bcryptjs.hash(user.password, 10);
 
@@ -131,7 +157,7 @@ async function authenticateUser({ mail, password: recievedPassword }) {
 async function findUser(mail) {
   await client.connect();
   const database = client.db('discord-clone');
-  const users = database.collection('users');
+  const users = database.collection('user');
 
   const user = users.findOne({ mail });
 
